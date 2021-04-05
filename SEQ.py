@@ -100,10 +100,24 @@ def str_compression(s):
 
 print(str_compression("aaabbccaaa"))
 
+# 연습 문제 3 - 가능한 순열 전부 체크
+# EX) perm (123) => 123, 321, 213, 231, 321
+# 일단 숫자 전체를 스캔한 다음
+# perm(123) => perm(1) + perm(23)
+# 재귀 호출로 해결
+# 이 경우에는 perm(123) -> perm(1)일때 perm(23), perm(2)일때 perm(1,3)...
+print("=====연습 문제 3=====")
+def perm(s):
+    res = []
+    if len(s) < 2:
+        return s # 종료 조건
+    else:
+        for i, c in enumerate(s):
+            for cc in perm(s[:i]+s[i+1:]): # i=0이면 s[0]+s[1:] 012면 0, 1]
+                res.append(c+cc)
+    return res
 
-
-
-
+print(perm("012"))
 
 
 

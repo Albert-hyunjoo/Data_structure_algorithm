@@ -73,6 +73,98 @@ $ python 1_sys_example.py 로미오 줄리엣
 # 로미오
 # 줄리엣
 ```
+# 제어문
+
+## 분기점: if문
+* 다른 언어의 `switch`나 `case`를 대체한다.
+
+## 반복문: for문
+* 파이썬의 `for`문은 다른 언어의 `for`와 달리, 모든 시퀀스 항목을 순회한다.
+
+## 참과 거짓: True and False
+* 파이썬에서 거짓은 `''`, `[]`, `{}`같이 빈 것으로 정의되며, 그 외의 모든 것은 참이다.
+* `False`를 올바르게 사용하기 위한 파이썬 가이드라인에 따르면,
+  1) `!=`나 `==` 로 `None`을 정의하지 않는다; 대신 `is not`을 사용한다.
+  2) `if x is not none` 과 `if x` 를 잘 구별한다.
+  3) `== False` 대신에 `if not x`를 사용한다.
+  4) `if len seq` 보다 `if not seq`나 `if seq`를 사용한다.
+  
+## return과 yield의 차이
+* 파이썬에서 제너레이터는 이터레이터를 작성하는 편리한 방법으로
+* `__iter__`와 `__next__` 구현시 사용 가능
+* `return`은 바로 반환값을 반환, 메서드 종료 후, 호출자에 값을 반환
+* `yield`는 반환값을 호줄자에게 반환 후에 소진시에만 메서드가 종료
+* 즉, 바로바로 반환을 하는 `return`에 비해 `next()`로 필요한 때만 값 호출이 가능
+
+## break와 Continue
+* `break`는 반복문을 그 즉시 종료시키며, `continue`는 반복문의 다음 단계로 넘어간다.
+* 반복문의 `else`절에 상관없이 `break`는 바로 종료, `continue`는 `else`문 이하로 이동한다.
+
+## 그외의 다른 메서드들
+* `range()`는 특성 시작점에서 끝점까지의 숫자 리스트를 생성한다.
+* `enumerate()`는 반복 간으한 객체의 인덱스 값과 항목 값의 튜플을 반환한다.
+* `zip()`은 2개 이상의 시퀀스를 인수로 취해서, 1:1 대응하는 튜플 시퀀스를 생성한다.
+*`filter(func, seq)`는 시퀀스의 항목 중 함수 조건이 `True`인 것만 추출한 시퀀스를 반환한다.
+* `map(func, list)`는 시퀀스의 모든 항목에 함수 적용 결과를 반환한다.
+* `lambda()` 는 코드 내에서 간결한 동적 함수를 지원한다.
+  ```python
+  area = lambda b, h: 0.5 * b * h
+  area(5,4)
+  ```
+   ```python
+  # defaultdict에서 누락된 키에 대한 기본값 생성
+  import Collections
+  minus_one_dict = collections.defaultdict(lambda: -1)
+  point_zero_dict = collections.defaultdict(lambda: (0,0))
+  message_dict = collections.defaultdict(lambda: "No Message")
+  ```
+# 파일 처리 메서드
+
+## 파일의 실행 및 읽기
+* `open(filename, mode, encoding)`은 파일을 읽어서 객체를 반환한다.
+* `read(size)`는 파일에서 `size`만큼 읽고, 문자열로 반환한다.
+* `readline()`은 파일에서 _한 줄_, `readlines()`는 모든 _데이터의 행 포함 리스트_를 반환한다.
+
+## 파일을 작성하기
+* `write()`는 데이터를 파일에 쓰고, `None`을 반환한다.
+* `tell()`과 `seek(offset, from-what)`는 파일의 현재 위치를 나타내는 정수를 반환한다.
+* `close()`는 파일을 닫고, 열린 파일이 차지하는 시스템 자원을 해제한다.
+* `input()` 함수는 사용자의 입력을 받으며, 콘솔의 문자열을 선택적으로 지정할 수 있다.
+
+## 3가지 시스템 조작 모듈
+* `shutil`은 시스템에서 파일을 조작하는데 유리한 모듈이다.
+* `pickle`은 파이썬 객체를 가져와서, 문자열 표현으로 변환 (피클링) 한다.
+* `struct`는 파이썬 객체를 이진으로 변환, or 반대도 가
+
+# 오류 처리 메서드
+
+## 예외 체리 메서드
+* `try`는 오류가 발생할 것으로 예상되는 코드를 실행하는 커맨드이다.
+* 만약 예외가 발생하지 않으면 `except`문은 건너뛰지만, 발생시 이하 구문 통해 예외를 처리한다.
+* 오류 여부와 관계없이 `finally`를 통해서 코드를 마무리한다.
+* `raise`를 실행하면 어떠한 예외를 의도적으로 불러일으킬 수 있다.
+
+## 예외 체리 가이드
+* `raise MyError('오류 메시지')` 형식으로 오류를 처리하며, 두 개 인수 형식은 사용 지양
+* 내장 예외 클래스를 적절해야 사용해야 하며, `assert`의 지나친 사용은 지양한다.
+```python
+# 사용가능한 포트에 연결, minimum 포트를 반환
+def ConnectToNextPort(self, minimum):
+  # raise로 오류를 처리하는 게 주가 되어야 하고
+  if mimimum < 1024:
+      raise ValueError("1025 이상의 포트를 입력하십시오.")
+  port = self.FindNextOpenPort(minimum)
+  if not port:
+    raise ConnectionError("$d에 연결 불가합니다." % (minimum,))
+  # assert는 정확도를 높일 떄만 쓰일 수 있도록
+  assert port > minimum, ("예상 못한 %d 포트에 연결했습니다."" % (minimum,")...)
+  return port
+  ```
+* 라이브러리나 패키지는 자체적인 예외를 정의하는 것이 좋으며, 이때는 `Exception` 클래스를 상속한다.
+* `try/except` 안의 블록 코드양을 최소화하도록 한다.
+* `finally`는 사용하는 것이 좋다; 자원 정리에 용이하기 떄문이다.
+* 예외를 처리할 경우에는 쉼표 대신에 `as`를 사용한다.
+
 
 
 

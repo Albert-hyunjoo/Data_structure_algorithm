@@ -34,7 +34,7 @@
 
 import subprocess
 
-subprocess.run(args, stdin = None, input = None, stdout = None,
+subprocess.run(args = None, stdin = None, input = None, stdout = None,
                stderr = None, capture_output= False, shell = False,
                cwd = None, timeout = None, check = False, encoding = None,
                errors = None, text = None, env = None...)
@@ -176,3 +176,17 @@ if __name__ == "__main__":
     for t in threads: # t.append해서 돌리고 thread 안의 모든 t에 대해 join으로 stop
         t.join()
 ```
+## 데드락과 스핀락
+
+### 데드락
+* 두 개 이상의 프로세스나 스레드가 서로를 기다리느라 미완료된 상태
+* 프로그램에 락을 할당하고 순차 획득하도록 하면 막을 수 있다.
+* 데드락을 발생시키는 **4가지 조건**은 다음과 같다.
+    1) 상호 배제: 자원은 하나에 한 프로세스만
+    2) 점유와 대기 : 한 프로세스가 자원 점유 중에는 다른 프로세스는 대기
+    3) 비선점 : 다른 프로세스가 점유한 자원을 뺏어오지는 못한다
+    4) 순환 대기 : A는 B를 기다리고, B는 C를 기다린다
+
+### 스핀락
+* 스핀락은 임계 구역 진입이 불가능할 때, 진입할 때까지 반복하는 락이다.
+    

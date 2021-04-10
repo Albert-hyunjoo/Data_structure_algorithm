@@ -43,9 +43,9 @@
 ```python
 action = "h"
 if action == h:  
-hello()  
+    hello()  
 elif action == "w":  
-world()
+    world()
 ```
 딕셔너리를 활용해서 사용하면 분기를 효율적으로 할 수 있다.  
 ```python

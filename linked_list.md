@@ -171,15 +171,25 @@ class LinkedListFIFO(object):
         return node, prev, found
 
     def deleteNode(self, index):
+        # 인덱스로 찾아서 노드를 삭제한다
+        # 만약 self.head가 없거나 pointer가 없다면
+        # 그냥 first만 삭제하면 node가 삭제
         if not self.head or not self.head.pointer:
             self._deletefirst()
         else:
+        # 아니면은 앞에서 prev, node, i 정보 _find(index) 찾고
+        # 만약 찾고자 하는 index이고 node가 있으면
+        # 일단 length 하나 줄이고 시작한다 (FIFO) 이므로 앞으로 나간다
             node, prev, i = self._find(index)
             if i == index and node:
                 self.length -= 1
+                # 만약 그게 퍼스트이거나 앞에 prev가 없으면
                 if i == 0 or not prev:
                     self.head = node.pointer
                     self.tail = node.pointer
+                # 중간에 것을 삭제하는 경우에는
+                # prev의 pointer를 지우고자 하는 노드의 다음으로 전환
+                # 그러면 지우고자 하는 node는 바로 사라짐
                 else:
                     prev.pointer = node.pointer
             else:

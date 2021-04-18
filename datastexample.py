@@ -55,6 +55,7 @@ def count_sort_dict(a):
     for k in range(min(c), max(c)+1):
         b.extend(c[k])
         print(b)
+    print(c)
     return b
 
 print(count_sort_dict([3, 5, 2, 6, 8, 1, 0, 3, 5, 6, 2, 5, 4, 1, 5, 3]))

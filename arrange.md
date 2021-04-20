@@ -155,5 +155,81 @@ def merge(left, right):
     result.extend(right[j:])
     return result
 ```
+### 퀵 정렬 (Quick Sort)
+* `퀵 정렬`은 `피벗` 값을 선택하는 것이 성능의 핵심에 해당한다.
+* 피벗 이전의 값들은 피벗보다 작게, 피벗 이후의 값은 피벗보다 크게 배열한다.
+* 분할 과정에서 n-1 요소의 영역 생성된 경우 (피벗이 최대, 최소) 시간복잡도는 `O(n^2)`이다.
+* 최선의 경우 (두 개의 n/2 리스트) 시간 복잡도는 `O(n log n)` 이다.
+* 정렬 알고리즘 자체는 그렇게 **안정적이지는 않다**
+```python
+# 한 함수로 바로 구현하는 경우
+def quick_sort_cache(seq):
+    
+    # 피벗 설정하기
+    if len(seq) < 2:
+        return seq
+    ipivot = len(seq)//2
+    pivot = seq[ipivot]
+    
+    # 그룹 나누기
+    before = [x for i, x in enumerate(seq) if x <= pivot and i != ipivot]
+    after = [x for i, x in enumerate(seq) if x > pivot and i != ipivot]
+    
+    # 재귀 형식으로 before와 after 처리하기
+    return quick_sort_cache(before) + [pivot] + quick_sort_cache(after)
+```
+```python
+# 앞의 퀵함수를 파티션으로 나눈 경우
+# 함수 첫번째는 before, after, partition을 지정
+# 함수 두번째는 퀵 소트를 시행하는 함수
 
+def partition_divided(seq):
+    pivot, seq = seq[0], seq[:1]
+    before = [x for x in seq if x <= pivot]
+    after = [ x for x in seq if x > pivot]
+    return before, pivot, after
 
+def quick_sort_cache_divided(seq):
+    
+    if len(seq) < 2:
+        return seq
+    
+    before, pivot, after = partition_divided(seq)
+    return quick_sort_cache_divided(before) + [pivot] + quick_sort_cache_divided(after)
+```
+```python
+# 앞의 퀵함수를 캐시 사용안하는 경우
+
+def partition(seq, start, end):
+    
+    # 변수의 설정
+    pivot = seq[start]
+    left = start + 1
+    right = end
+    done = False
+    
+    while not done:
+        # 만약 left가 여전히 왼쪽, right가 여전히 오른쪽이고
+        # left에 해당하는 값이 pivot보다 작으면,
+        # left를 한 칸 옮긴다
+        while left <= right and seq[left] <= pivot:
+            left += 1
+        while left <= right and pivot <= seq[right]:
+            right -= 1
+        if right < left:
+            done = True
+        else:
+            seq[left], seq[right] = seq[right], seq[left]
+    seq[start], seq[right] = seq[right], seq[start]
+    return right
+
+def quick_sort(seq, start, end):
+    
+    if start < end:
+        pivot = partition(seq, start, end)
+        quick_sort(seq, start, pivot-1)
+        quick_sort(seq, pivot+1, end)
+        
+    return seq
+    
+```

@@ -22,8 +22,6 @@ def merge(left, right):
         result.extend(left[i:])
     if right[j:]:
         result.extend(right[j:])
-    print(result)
     return result
 
-print(merge_sort_sep([5,2,7,9,1,3,10,4]))
-
+print(merge_sort_sep([1,4,2,9,5]))

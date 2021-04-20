@@ -233,3 +233,28 @@ def quick_sort(seq, start, end):
     return seq
     
 ```
+### 힙 정렬 (Heap Sort)
+* `힙`를 활용한 정렬 방법으로, 작은 요소가 루트가 저장되고 하위 트리에는 **루트보다 크거나 작은 값**이 저장된다.
+* 힙의 삽입 시간복잡도는 `O(1)`이고, 확인하는데 드는 시간복잡도는 `O(log n)`, 순회는 `O(n)`
+```python
+import heapq
+
+def heap_sort1(seq):
+    h = []
+    for value in seq:
+        heap.heappush(h, value) # 힙으로 push한 다음에 (어차피 O(1))
+    return [heapq.heappop(h) for i in range(len(h))] # 작은 것부터 뽑아낸다
+```
+## 주요 정렬의 시간복잡도
+
+
+|알고리즘|시간복잡도 (최선-평균-최악)|공간복잡도 (최악)
+|:---:|:---:|:---:|
+|퀵 정렬|O(n log n) / O(n log n) / O(n^2)|O(n)|
+|병합 정렬|O(n log n) / O(n log n) / O(n log n)|O(n)|
+|힙 정렬|O(n log n) / O(n log n) / O(n log n)|O(1)|
+|거품 정렬|O(n) / O(n^2) / O(n^2)|O(1)|
+|삽입 정렬|O(n) / O(n^2) / O(n^2)|O(1)|
+|선택 정렬|O(n^2) / O(n^2) / O(n^2)|O(1)|
+|버킷 정렬|O(n+k) / O(n+k) / O(n^2)|O(nk)|
+|기수 정렬|O(nk) / O(nk) / O(nk) |O(n+k)|

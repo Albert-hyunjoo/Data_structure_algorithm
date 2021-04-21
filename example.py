@@ -1,27 +1,23 @@
-def merge_sort_sep(seq):
-    if len(seq) < 2:
-        return seq
-    mid = len(seq)//2
-    left = merge_sort_sep(seq[:mid])
-    right = merge_sort_sep(seq[mid:])
-    return merge(left, right)
-
-def merge(left, right):
-    if not left and not right:
-        return left or right # 정렬이 없으면 not
-    result = []
-    i, j = 0, 0
-    while i < len(left) and j < len(right): # i와 j가 안에 있는한
-        if left[i] <= right[j]: # 만약 left에서의 i번쨰와 right의 j번째에서 right가 큰 경우
-            result.append(left[i]) # 더 작은 걸 합하고
-            i += 1
+def find_max_unimodel_array(A):
+    if len(A) <= 2:
+        return None
+    left = 0
+    right = len(A) - 1
+    while right > left + 1:
+        mid = (left+right)//2
+        if A[mid] > A[mid-1] and A[mid] > A[mid+1]:
+            return A[mid]
+        elif A[mid] > A[mid-1] and A[mid] < A[mid+1]:
+            left = mid
         else:
-            result.append(right[j]) # 더 작은 걸 합하고
-            j += 1 # j의 인덱스를 증가
-    if left[i:]: # 한쪽이 먼저 끝나버리면 다른 한 쪽에서 진행된 인덱스부터 끝까지의 배열을 합한다
-        result.extend(left[i:])
-    if right[j:]:
-        result.extend(right[j:])
-    return result
+            right = mid
+    return None
 
-print(merge_sort_sep([1,4,2,9,5]))
+def test_find_max_unimodal_array():
+    seq = [1, 2, 5, 6, 7, 10, 12, 9, 8, 7, 6]
+    assert(find_max_unimodel_array(seq) == max(seq))
+    print("테스트 통과!")
+
+
+if __name__ == "__main__":
+    test_find_max_unimodal_array()

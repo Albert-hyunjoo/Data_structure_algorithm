@@ -1,10 +1,14 @@
-def dp_longest_inc_subseq(seq):
-    L = [1] * len(seq)
-    for cur, val in enumerate(seq):
-        for pre in range(cur):
-            if seq[pre] <= val:
-                L[cur] = max(L[cur], 1+L[pre])
-    print(L)
-    return max(L)
+class SimpleTree(object):
+    def __init__(self, value = None, children = None):
+        self.value = value
+        self.children = children
+        if self.children is None:
+            self.children = []
+    def __repr__(self, level = 0):
+        ret = "\t" * level + repr(self.value) + "\n"
+        for child in self.children:
+            ret += child.__repr__(level+1)
+        return ret
 
-print(dp_longest_inc_subseq([94, 8, 78, 22, 38, 79, 93, 8, 84, 39]))
+st = SimpleTree("a", [SimpleTree("b", [SimpleTree("d"), SimpleTree("f")]), SimpleTree("c")])
+print(st)

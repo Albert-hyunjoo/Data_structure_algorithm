@@ -402,5 +402,108 @@ class NodeAVL(NodeBT):
         
         return x
         
+    def right_rotate(self):
+      '''
+          [변경 전에는]
+          * self.left = y
+          * y.right = T2
+          ============================
+                   x(self)
+                   /     \
+                  y      T3
+                /   \
+              T1    T2
+          ============================
+          
+          [변경 후에는 -- left rotate]
+          * y.right = self
+          * self.left = T2
+          ============================
+                   Y (self)
+                    /   \
+                   T1    X
+                       /   \
+                      T2   T3
+          ============================ 
+          '''  
+        y = self.right
+        T2 = y.right
+
+        y.right = self
+        self.left = T2
+
+        self.height = 1 + max(self.get_height(self.left),
+                              self.get_height(self.right))
+        y.height = 1 + max(self.get_height(y.left),
+                           self.get_height(y.right))
         
+        return y
+    
+    def get_height(self, node):
+        if not node:
+            return 0
+        return node.height
+
+    def get_balance(self):
+        return self.get_height(self.left) - self.get_height(self.right)
+
+    def get_min_value_node(self, node):
+        if node is None or node.left is None:
+        # 만약 node가 없고, node.left가 없거나 하면
+            return node
+        return self.get_min_value_node(node.left)
+
+    def delete(self, value):
+        # 1) 이진 트리 노드 삭제
+        if value < self.value:
+        # 지우고자 하는 value가 (sub)tree의 Root Node보다 낮으면
+            self.left = self.left and self.left.delete(value)
+        elif value > self.value:
+            self.right = self.right and self.right.delete(value)
+        else:
+        # 여기서 else라는 뜻은 "지우고자 하는 부분에 도달"
+            if self.left is None:
+            # 만약 그 루트의 left가 없으면
+                temp = self.right
+                self = None
+                return temp
+            elif self.right is None:
+            # 만약 그 루트의 right가 없으면
+                temp = self.left
+                self = None
+                return temp
+            # 지우고자 하는 node가 left, right 둘다 있으면
+            # self.right인 subtree의 최솟값을 temp로 저장
+            # 그 temp.value를 원래 self.value (지우고자 하는 값)에 연동
+            # 아까 사용한 self.get_min_value_node(self.right)는 삭제
+            temp = self.get_min_value_node(self.right)
+            self.value = temp.value
+            self.right = self.right and self.right.delete(temp.value)
+        
+            if self is None:
+                return None
+        # 그 삭제된 노드의 rotate를 진행  
+        return self.rotate(value)
+
+class AVLTree(BinaryTree):
+    def __init__(self):
+        self.root = None
+    
+    def insert(self, value):
+        if not self.root:
+        #  만약 self.root가 없으면
+            self.root = NodeAVL(value)
+        else:
+            self.root= self.root.insert(value)
+    
+    def delete(self, value):
+        self.root = self.root.delete(value)
+
+    def preorder(root): # printing out
+        if root:
+            print("{0}, {1}".format(root.value, root.height - 1), end = "")
+        if root.left:
+            preorder(root.left)
+        if root.right:
+            preorder(root.right)
 ```

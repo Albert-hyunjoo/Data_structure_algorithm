@@ -107,5 +107,117 @@ class BSTwithTransversalIterative(BinarySearchTree):
             if current.right:
                 queue.append(current.right)
         return nodes
+```
+```python
+# 재귀 방식을 통해서 구현하는 방법도 있다.
+from binary_search_tree import BinarySearchTree, NodeBST
 
+class BSTwithTransversalRecursively(BinarySearchTree):
+    
+    def __init__(self):
+        self.root = None
+        self.nodes_BFS = []
+        self.nodes_pre = []
+        self.nodes_post = []
+        self.nodes_in = []
+
+    def BFT(self):
+        # 너비 우선 탐색의 사례
+        # 여기서는 재귀를 사용하지 않는다
+        
+        # 여기서는 기본적으로 root.level = 1로 가정해서 시작
+        # queue는 LIFO로, 먼저 들어온 것들이 먼저 나가고, stack과는 다르다.
+        # queue안에다가 root를 머저 넣고,
+        # current_level은 그 self.root.level에 해당한다.
+        self.root.level = 1
+        queue = [self.root]
+        current_level = self.root.level
+
+        # len(queue)가 0이 되지 않는 선에서
+        while len(queue) > 0:
+            # queue에서 맨 앞의 것을 뽑아내고
+            current_node = queue.pop(0) # queue에서 맨 앞의 하나를 추출
+            # 그 node가 현재 훑는 위치와 다르면
+            if current_node.level > current_level:
+            # 만약 현재 노드 레벨이 다르면
+            # current_level += 1를 해서 맞춘다
+                current_level += 1
+            self.nodes_BFS.append(current_node.value)
+            
+            # 만약 current_node를 기준으로 left가 있으면
+            # current_node의 left를 root node, 즉 current_node로 만들고
+            # 이를 연산 리스트 (append) 에 추가한다 (left)
+            if current_node.left:
+                current_node.left.level = current_level + 1
+                queue.append(current_node.left)
+                
+            if current_node.right:
+                current_node.right.level = current_level + 1
+                queue.append(current_node.right)
+        
+        return self.nodes_BFS
+    
+    def inorder(self, node = None, level = 1):
+        if not node and level == 1: # 노드가 없고, level == 1이다.
+            node = self.root
+        if node: 
+            self.inorder(node.left, level + 1) # 왼쪽으로 갔다가
+            self.nodes_pre.append(node.value) # 값 추가하고
+            self.inorder(node.right, level + 1) # 다음 인덱스로 넘어가기
+        return self.nodes_in
+    
+    def preorder(self, node = None, level = 1):
+        if not node and level == 1:
+            node = self.root
+        if node: # 노드가 존재하면
+            self.nodes_pre.append(node.value)
+            self.preorder(node.left, level + 1)
+            self.preorder(node.right, level + 1)
+        return self.nodes_pre
+    
+    def postorder(self, node = None, level = 1):
+        if not node and level == 1:
+            node = self.root
+        if node:
+            self.postorder(node.left, level + 1)
+            self.postorder(node.right, level + 1)
+            self.nodes_post.append(node.value)
+        return self.nodes_post
+```
+## 연습문제 : 최소 공통 조상 (LCA)
+* `최소 공통 조상` 문제는 두 개의 node가 **상위 레벨에서 가장 먼저 만나는** 공통 노드를 찾는다.
+* 문제를 해결하는 알고리즘은 다음과 같은 프로세스로 진행한다.    
+> 1. 중위 순회를 통해서 사전에 리스트를 추출해놓고
+       * 중위 순회를 통해서 리스트가 출력된다면 `왼쪽 루트 -> 가지` 순으로 
+> 2. 만약 `최소 공통 조상` 노드가 두 개의 노드 중 **작은 것보다 작으면** **두 칸 아래**로
+> 3. 만약 `최소 공통 조상` 노드가 **큰 노드보다 크면** **한 칸 아래**로 탐색
+> 4. `최소 공통 조상` 노드가 **사이**에 있으면 **그 값을 출력**
+
+```python
+# LCA 알고리즘 방식
+# input은 총 3개로, path, lower_value, high_value
+# path는 중위 순회 방식으로 순회된 리스트
+# lower value는 찾고자 하는 노드 중에 작은 노드
+# higher value는 찾고자 하는 노드 중에 큰 노드
+
+from transversal_BST_recursively import BSTwithTransversalRecursively
+
+def find_ancestor(path, lower_value, higher_value):
+    # 사전에 트리는 전위 순회가 되어있어야 한다.
+    # 리스트를 통해서 lower value, higher_value 범위를 조사
+    # current_value를 추출해낸다.
+    while path:
+        current_value = path[0]
+        if current_value < lower_value:
+            try:    
+                path = path[2:]
+            except:
+                return current_value
+        elif current_value > higher_value:
+            try:
+                path = path[1:]
+            except:
+                return current_value
+        elif lower_value <= current_value <= higher_value:
+            return current_value
 ```
